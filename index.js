@@ -30,16 +30,23 @@ var logSuccess = clc.green;
  * @class JekyllToGhost
  */
 function JekyllToGhost(pathPosts) {
-    this.posts = '' + pathPosts + '';
-    
+    this.folder = './' + pathPosts;
     this.readPosts();
 }
 
 JekyllToGhost.prototype.readPosts = function() {
-    var folder = this.posts;
+    var folder = this.folder
+        , re = /(\.md|\.markdown)$/i;
 
-    if ( fs.exists('./posts/') ) {
-        console.log( logWarn('reading posts at ' + folder) );
+    if ( fs.existsSync(folder) ) {
+         fs.readdir(folder, function(error, files) {
+            if ( error || files.length < 1 ) {
+                console.log( logWarn('Can not read files at ' + folder) );
+                return false;
+            }
+
+            console.log(files);
+         })
     } else {
         console.log( logWarn('Folder > ' + folder + ' < does not exists.') );
         console.log( logWarn('Make sure to include a folder with Jekyll markdown files inside.') );
