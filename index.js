@@ -9,9 +9,8 @@ var path = require('path')
     , clc = require('cli-color')
     , moment = require('cli-color')
     , markdown = require( "markdown" ).markdown
-    , readline = require('readline');
-    // , lowdb = require('lowdb')
-    // , db = lowdb('ghost-generated.json');
+    , readline = require('readline')
+    , _ = require('lodash');
 
 var rl = readline.createInterface({
   input: process.stdin,
