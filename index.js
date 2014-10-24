@@ -35,12 +35,13 @@ function JekyllToGhost(pathPosts) {
 }
 
 /**
- * Responsible to read each post and split between YAML and Markdown content
+ * Read each post to fill the json format
  * @method readPosts
  */
 JekyllToGhost.prototype.readPosts = function() {
     var post, postName, postDate, postPath, 
         postContent, postYAML, postMarkdown
+        , self = this;
         , folder = this.folder
         , re = /(\.md|\.markdown)$/i;
 
@@ -72,8 +73,8 @@ JekyllToGhost.prototype.readPosts = function() {
                     }
 
                     postContent = data.toString();
-                    postYAML = postContent.substring(0, postContent.lastIndexOf('---') );
-                    postMarkdown = postContent.substring(postContent.lastIndexOf('---') + 3, postContent.length);
+                    postYAML = self.extractToYAML(postContent);
+                    postMarkdown = self.extractToMarkdown(postContent);
                 });
             }
         }
@@ -81,12 +82,26 @@ JekyllToGhost.prototype.readPosts = function() {
 }
 
 /**
- * Receive YAML and Markdown content to create
- * to Ghost JSON format and save
- * @param  {[type]} postYAML     [description]
- * @param  {[type]} postMarkdown [description]
- * @return {[type]}              [description]
+ * Extract YAML content
+ * @param  {[string]} post [post content]
+ * @return {[string]}      [YAML extracted]
+ * @method extractToYAML
  */
+JekyllToGhost.prototype.extractToYAML = function(content) {
+    return content.substring(0, content.lastIndexOf('---') );
+}
+
+/**
+ * Extract Markdown content
+ * @param  {[type]} post [post content]
+ * @return {[string]}      [Markdown extracted]
+ * @method extractToMarkdown
+ */
+JekyllToGhost.prototype.extractToMarkdown = function(content) {
+    return content.substring(content.lastIndexOf('---') + 3, content.length);
+}
+
+
 JekyllToGhost.prototype.createGhostJSON = function(postYAML, postMarkdown) {
 
 }
