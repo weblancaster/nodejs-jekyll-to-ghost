@@ -63,8 +63,8 @@ JekyllToGhost.prototype.readPosts = function() {
             postPath = folder + post;
 
             if ( re.exec(post) ) {
-                postName = post.substring(0, post.indexOf('.'));
-                postDate = post.substring(0, 10);
+                postName = self.extractPostName(post);
+                postDate = self.extractDate(post);
 
                 fs.readFile(folder + post, function(error, data) {
                     if ( error ) {
@@ -73,8 +73,8 @@ JekyllToGhost.prototype.readPosts = function() {
                     }
 
                     postContent = data.toString();
-                    postYAML = self.extractToYAML(postContent);
-                    postMarkdown = self.extractToMarkdown(postContent);
+                    postYAML = self.extractYAML(postContent);
+                    postMarkdown = self.extractMarkdown(postContent);
                 });
             }
         }
@@ -82,28 +82,41 @@ JekyllToGhost.prototype.readPosts = function() {
 }
 
 /**
- * Extract YAML content
- * @param  {[string]} post [post content]
- * @return {[string]}      [YAML extracted]
- * @method extractToYAML
+ * Extract post date
+ * @param  {[string]} content [post]
+ * @return {[string]}         [date]
  */
-JekyllToGhost.prototype.extractToYAML = function(content) {
+JekyllToGhost.prototype.extractDate = function(content) {
+    return content.substring(0, 10)
+}
+
+/**
+ * Extract post name
+ * @param  {[string]} content [post]
+ * @return {[string]}         [name]
+ */
+JekyllToGhost.prototype.extractPostName = function(content) {
+    return content.substring(11, content.indexOf('.'));
+}
+
+/**
+ * Extract post YAML
+ * @param  {[string]} content [post]
+ * @return {[string]}      [YAML]
+ * @method extractYAML
+ */
+JekyllToGhost.prototype.extractYAML = function(content) {
     return content.substring(0, content.lastIndexOf('---') );
 }
 
 /**
- * Extract Markdown content
- * @param  {[type]} post [post content]
- * @return {[string]}      [Markdown extracted]
- * @method extractToMarkdown
+ * Extract post Markdown
+ * @param  {[string]} content [post]
+ * @return {[string]}      [Markdown]
+ * @method extractMarkdown
  */
-JekyllToGhost.prototype.extractToMarkdown = function(content) {
+JekyllToGhost.prototype.extractMarkdown = function(content) {
     return content.substring(content.lastIndexOf('---') + 3, content.length);
-}
-
-
-JekyllToGhost.prototype.createGhostJSON = function(postYAML, postMarkdown) {
-
 }
 
 /**
