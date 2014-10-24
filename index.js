@@ -41,7 +41,7 @@ function JekyllToGhost(pathPosts) {
 JekyllToGhost.prototype.readPosts = function() {
     var post, postName, postDate, postPath, 
         postContent, postYAML, postMarkdown
-        , self = this;
+        , self = this
         , folder = this.folder
         , re = /(\.md|\.markdown)$/i;
 
@@ -49,13 +49,13 @@ JekyllToGhost.prototype.readPosts = function() {
         console.log( logWarn('Folder > ' + folder + ' < does not exists.') );
         console.log( logWarn('Make sure to include a folder with Jekyll markdown files inside.') );
 
-        return false;
+        return;
     }
 
     fs.readdir(folder, function(error, files) {
         if ( error || files.length < 1 ) {
             console.log( logWarn('Can not read files at ' + folder) );
-            return false;
+            return;
         }
 
         for ( var i = 0; i < files.length; i++ ) {
@@ -69,7 +69,7 @@ JekyllToGhost.prototype.readPosts = function() {
                 fs.readFile(folder + post, function(error, data) {
                     if ( error ) {
                         console.log( logWarn('Something went wrong at ' + post) );
-                        return false;
+                        return;
                     }
 
                     postContent = data.toString();
@@ -113,7 +113,7 @@ JekyllToGhost.prototype.createGhostJSON = function(postYAML, postMarkdown) {
 function startUp() {
     console.log( logSuccess('Running...') )
 
-    rl.question('Type the name of the folder where Jekyll posts are hosted: ', function(pathPosts) {
+    rl.question('Type the folder name where Jekyll posts are: ', function(pathPosts) {
         var app = new JekyllToGhost(pathPosts);
         rl.close();
     });
