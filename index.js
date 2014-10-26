@@ -25,13 +25,63 @@ var logSuccess = clc.green;
 
 
 /**
- * Class/Constructor JekyllToGhost responsible to boostrap the conversion to Ghost format (json)
+ * Class/Constructor JekyllToGhost responsible to bootstrap the conversion to Ghost format (json)
  * @param {[string]} posts [contain path to Jekyll posts]
  * @class JekyllToGhost
  */
 function JekyllToGhost(pathPosts) {
     this.folder = './' + pathPosts + '/';
+    this.ghostObj = {};
+    this.ghostObj['data']['posts'] = [];
+
+    this.populateGhostData();
+}
+
+JekyllToGhost.prototype.populateGhostData = function(content) {
     this.readPosts();
+    this.populateMeta();
+
+    console.log('Data formatted:', this.ghostToJson())
+}
+
+/**
+ * Extract post date
+ * @param  {[string]} content [post]
+ * @return {[string]}         [date]
+ * @method extractPostDate
+ */
+JekyllToGhost.prototype.extractPostDate = function(content) {
+    return content.substring(0, 10)
+}
+
+/**
+ * Extract post name
+ * @param  {[string]} content [post]
+ * @return {[string]}         [name]
+ * @method extractPostName
+ */
+JekyllToGhost.prototype.extractPostName = function(content) {
+    return content.substring(11, content.indexOf('.'));
+}
+
+/**
+ * Extract post YAML
+ * @param  {[string]} content [post]
+ * @return {[string]}      [YAML]
+ * @method extractYAML
+ */
+JekyllToGhost.prototype.extractPostYAML = function(content) {
+    return yaml.safeLoad( content.substring(0, content.lastIndexOf('---')) );
+}
+
+/**
+ * Extract post Markdown
+ * @param  {[string]} content [post]
+ * @return {[string]}      [Markdown]
+ * @method extractMarkdown
+ */
+JekyllToGhost.prototype.extractPostMarkdown = function(content) {
+    return content.substring(content.lastIndexOf('---') + 3, content.length);
 }
 
 /**
@@ -41,6 +91,7 @@ function JekyllToGhost(pathPosts) {
 JekyllToGhost.prototype.readPosts = function() {
     var post, postName, postDate, postPath, 
         postContent, postYAML, postMarkdown
+        , postObjt = {}
         , self = this
         , folder = this.folder
         , re = /(\.md|\.markdown)$/i;
@@ -64,7 +115,7 @@ JekyllToGhost.prototype.readPosts = function() {
 
             if ( re.exec(post) ) {
                 postName = self.extractPostName(post);
-                postDate = self.extractDate(post);
+                postDate = self.extractPostDate(post);
 
                 fs.readFile(folder + post, function(error, data) {
                     if ( error ) {
@@ -73,50 +124,52 @@ JekyllToGhost.prototype.readPosts = function() {
                     }
 
                     postContent = data.toString();
-                    postYAML = self.extractYAML(postContent);
-                    postMarkdown = self.extractMarkdown(postContent);
+                    postYAML = self.extractPostYAML(postContent);
+                    postMarkdown = self.extractPostMarkdown(postContent);
+
+                    // postObjt['id'] = ;
+                    // postObjt['uuid'] = ;
+                    // postObjt['title'] = ;
+                    // postObjt['slug'] = ;
+                    // postObjt['markdown'] = ;
+                    // postObjt['html'] = ;
+                    // postObjt['image'] = null;
+                    // postObjt['featured'] = 0;
+                    // postObjt['page'] = 0;
+                    // postObjt['status'] = 'published';
+                    // postObjt['language'] = 'en_US';
+                    // postObjt['meta_title'] = ;
+                    // postObjt['meta_description'] = ;
+                    // postObjt['author_id'] = ;
+                    // postObjt['created_at'] = ;
+                    // postObjt['created_by'] = 1;
+                    // postObjt['updated_at'] = ;
+                    // postObjt['updated_by'] = 1;
+                    // postObjt['published_at'] = ;
+                    // postObjt['published_by'] = 1;
+
+                    // self.populatePosts(postObjt);
+
                 });
             }
         }
      })
 }
 
-/**
- * Extract post date
- * @param  {[string]} content [post]
- * @return {[string]}         [date]
- */
-JekyllToGhost.prototype.extractDate = function(content) {
-    return content.substring(0, 10)
+JekyllToGhost.prototype.populateMeta = function() {
+    this.ghostObj['meta'] = {
+        'exported_on': Date.now(),
+        'version': '000'
+    }
 }
 
-/**
- * Extract post name
- * @param  {[string]} content [post]
- * @return {[string]}         [name]
- */
-JekyllToGhost.prototype.extractPostName = function(content) {
-    return content.substring(11, content.indexOf('.'));
+JekyllToGhost.prototype.populatePosts = function(postObjt) {
+    this.ghostObj['data']['posts'].push(postObjt)
 }
 
-/**
- * Extract post YAML
- * @param  {[string]} content [post]
- * @return {[string]}      [YAML]
- * @method extractYAML
- */
-JekyllToGhost.prototype.extractYAML = function(content) {
-    return content.substring(0, content.lastIndexOf('---') );
-}
 
-/**
- * Extract post Markdown
- * @param  {[string]} content [post]
- * @return {[string]}      [Markdown]
- * @method extractMarkdown
- */
-JekyllToGhost.prototype.extractMarkdown = function(content) {
-    return content.substring(content.lastIndexOf('---') + 3, content.length);
+JekyllToGhost.prototype.ghostToJson = function() {
+    return JSON.stringify(this.ghostObj)
 }
 
 /**
