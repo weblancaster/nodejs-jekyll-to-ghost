@@ -7,9 +7,38 @@ It doesn't handle static pages, and it doesn't do anything with images. You'll h
 This was built by reverse-engineering the version of [Wordpress plugin](https://github.com/redwallhp/Jekyll-to-Ghost/) and  [Ghost schema](https://github.com/TryGhost/Ghost/blob/master/core/server/data/schema.js) to match the JSON file it outputs.
 
 
-### Installation
+### Prerequisite
 
-Coming soon
+- Node.js
+
+### How to use
+
+Clone/download the repository then place your Jekyll posts into `posts` folder or create a folder in the root level with your Jekyll posts.
+Your post should be on YAML format (which is Jekyll default format).
+
+Run the command
+
+```ruby
+node index.js
+```
+
+Type the name of the folder.. wait for the magic happen.
+If everything went fine you should get this message
+
+`Ghost JSON generated successfully!`
+
+And a file called `ghost-generated.json` was created on your folder.
+
+After do the steps above boot up your Ghost platform.
+
+```ruby
+npm start
+```
+
+Go to the url `http://localhost:2368/ghost/debug/` import the file generated nodejs-jekyll-to-ghost called `ghost-generated.json`
+That's it.. Now you should have migrated your posts to Ghost format and ready to begin blog on your new Ghost blog platform.
+
+ps: I removed all test posts on Ghost blog before migrate my Ghost generated format.
 
 ### Contributing
  
