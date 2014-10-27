@@ -169,16 +169,8 @@ JekyllToGhost.prototype.readPosts = function() {
 
 JekyllToGhost.prototype.writeToFile = function() {
     var data = this.ghostToJson();
-    
-    fs.writeFile(this.ghostFileOutput, data, function (error) {
-        if ( error ) {
-            console.log( logError('Something went wrong when saving the Ghost output file.') )
-        }
 
-        console.log( logSuccess('Saved!') );
-        
-    }, 'utf8');
-    // fs.writeFileSync('./ghost-generated.json', data, 'utf8');
+    fs.writeFileSync(this.ghostFileOutput, data, 'utf8');
 }
 
 JekyllToGhost.prototype.populateMeta = function() {
