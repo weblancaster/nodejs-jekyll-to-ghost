@@ -7,7 +7,6 @@ var path = require('path')
     , yaml = require('js-yaml')
     , uuid = require('node-uuid')
     , clc = require('cli-color')
-    , moment = require('cli-color')
     , markdown = require( "markdown" ).markdown
     , readline = require('readline');
 
@@ -146,14 +145,14 @@ JekyllToGhost.prototype.readPosts = function() {
                 postObj['status'] = 'published';
                 postObj['language'] = 'en_US';
                 postObj['meta_title'] = postYAML.title;
-                // postObj['meta_description'] = postYAML.excerpt;
+                postObj['meta_description'] = null;
                 postObj['author_id'] = 1;
-                // postObj['created_at'] = ;
-                // postObj['created_by'] = 1;
-                // postObj['updated_at'] = ;
-                // postObj['updated_by'] = 1;
-                // postObj['published_at'] = ;
-                // postObj['published_by'] = 1;
+                postObj['created_at'] = Date.parse(postDate);
+                postObj['created_by'] = 1;
+                postObj['updated_at'] = Date.parse(postDate);
+                postObj['updated_by'] = 1;
+                postObj['published_at'] = Date.parse(postDate);
+                postObj['published_by'] = 1;
 
                 self.populatePosts(postObj);
 
@@ -175,7 +174,7 @@ JekyllToGhost.prototype.writeToFile = function() {
     var data = this.ghostToJson()
 
     fs.writeFileSync(this.ghostFileOutput, data, 'utf8');
-    console.log( logSuccess('Ghost generated successfully!') );
+    console.log( logSuccess('Ghost JSON generated successfully!') );
 }
 
 /**
@@ -210,16 +209,9 @@ JekyllToGhost.prototype.ghostToJson = function() {
  * Get the user input (folder name) and instantiate JekyllToGhost
  * passing the path of the folder
  */
-function startUp() {
-    console.log( logSuccess('Running...') )
+console.log( logSuccess('Running...') )
 
-    rl.question('Type the folder name where Jekyll posts are: ', function(pathPosts) {
-        var app = new JekyllToGhost(pathPosts);
-        rl.close();
-    });
-}
-
-/**
- * Initialize script
- */
-startUp()
+rl.question('Type the folder name where Jekyll posts are: ', function(pathPosts) {
+    var app = new JekyllToGhost(pathPosts);
+    rl.close();
+});
