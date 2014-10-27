@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/weblancaster/nodejs-jekyll-to-ghost",
   "dependencies": {
+    "async": "^0.9.0",
     "cli-color": "^0.3.2",
     "js-yaml": "^3.2.2",
     "lodash": "^2.4.1",
