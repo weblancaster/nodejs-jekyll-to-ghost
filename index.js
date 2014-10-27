@@ -4,6 +4,7 @@
 
 var path = require('path')
     , fs = require('fs')
+    , async = require('async')
     , yaml = require('js-yaml')
     , uuid = require('node-uuid')
     , clc = require('cli-color')
@@ -31,17 +32,21 @@ var logSuccess = clc.green;
  */
 function JekyllToGhost(pathPosts) {
     this.folder = './' + pathPosts + '/';
-    this.ghostObj = {};
-    this.ghostObj['data']['posts'] = [];
+    this.ghostFileOutput = './ghost-generated.json';
+    this.ghostObj = {
+        data: {
+            posts: []
+        }
+    };
 
     this.populateGhostData();
 }
 
 JekyllToGhost.prototype.populateGhostData = function(content) {
-    this.readPosts();
-    this.populateMeta();
+    var self = this;
 
-    console.log('Data formatted:', this.ghostToJson())
+    this.populateMeta();
+    this.readPosts();
 }
 
 /**
@@ -71,7 +76,7 @@ JekyllToGhost.prototype.extractPostName = function(content) {
  * @method extractYAML
  */
 JekyllToGhost.prototype.extractPostYAML = function(content) {
-    return yaml.safeLoad( content.substring(0, content.lastIndexOf('---')) );
+    return yaml.safeLoad( content.substring(0, content.indexOf('---', content.indexOf('---') + 1) ));
 }
 
 /**
@@ -91,7 +96,8 @@ JekyllToGhost.prototype.extractPostMarkdown = function(content) {
 JekyllToGhost.prototype.readPosts = function() {
     var post, postName, postDate, postPath, 
         postContent, postYAML, postMarkdown
-        , postObjt = {}
+        , data
+        , postObj = {}
         , self = this
         , folder = this.folder
         , re = /(\.md|\.markdown)$/i;
@@ -117,43 +123,54 @@ JekyllToGhost.prototype.readPosts = function() {
                 postName = self.extractPostName(post);
                 postDate = self.extractPostDate(post);
 
-                fs.readFile(folder + post, function(error, data) {
-                    if ( error ) {
-                        console.log( logWarn('Something went wrong at ' + post) );
-                        return;
-                    }
+                data = fs.readFileSync(postPath);
 
-                    postContent = data.toString();
-                    postYAML = self.extractPostYAML(postContent);
-                    postMarkdown = self.extractPostMarkdown(postContent);
+                if ( ! data ) {
+                    console.log( logWarn('Something went wrong at ' + post) );
+                    return;
+                }
 
-                    // postObjt['id'] = ;
-                    // postObjt['uuid'] = ;
-                    // postObjt['title'] = ;
-                    // postObjt['slug'] = ;
-                    // postObjt['markdown'] = ;
-                    // postObjt['html'] = ;
-                    // postObjt['image'] = null;
-                    // postObjt['featured'] = 0;
-                    // postObjt['page'] = 0;
-                    // postObjt['status'] = 'published';
-                    // postObjt['language'] = 'en_US';
-                    // postObjt['meta_title'] = ;
-                    // postObjt['meta_description'] = ;
-                    // postObjt['author_id'] = ;
-                    // postObjt['created_at'] = ;
-                    // postObjt['created_by'] = 1;
-                    // postObjt['updated_at'] = ;
-                    // postObjt['updated_by'] = 1;
-                    // postObjt['published_at'] = ;
-                    // postObjt['published_by'] = 1;
+                postContent = data.toString();
+                postYAML = self.extractPostYAML(postContent);
+                postMarkdown = self.extractPostMarkdown(postContent);
 
-                    // self.populatePosts(postObjt);
+                postObj['id'] = i;
+                postObj['uuid'] = uuid.v4();
+                postObj['title'] = postYAML.title;
+                postObj['slug'] = postName;
+                postObj['markdown'] = postMarkdown;
+                postObj['html'] = markdown.toHTML(postMarkdown);
+                postObj['image'] = null;
+                postObj['featured'] = 0;
+                postObj['page'] = 0;
+                postObj['status'] = 'published';
+                postObj['language'] = 'en_US';
+                postObj['meta_title'] = postYAML.title;
+                postObj['meta_description'] = postYAML.excerpt;
+                postObj['author_id'] = 1;
+                // postObj['created_at'] = ;
+                // postObj['created_by'] = 1;
+                // postObj['updated_at'] = ;
+                // postObj['updated_by'] = 1;
+                // postObj['published_at'] = ;
+                // postObj['published_by'] = 1;
 
-                });
+                self.populatePosts(postObj);
+
+                if ( (self.ghostObj.data.posts.length + 1) === files.length ) {
+                    console.log( logWarn('CALLED at LAST'))
+                    // self.writeToFile();
+                }
             }
+
         }
      })
+}
+
+JekyllToGhost.prototype.writeToFile = function() {
+    var data = this.ghostToJson();
+
+    fs.writeFileSync('./ghost-generated.json', data, 'utf8');
 }
 
 JekyllToGhost.prototype.populateMeta = function() {
@@ -163,8 +180,9 @@ JekyllToGhost.prototype.populateMeta = function() {
     }
 }
 
-JekyllToGhost.prototype.populatePosts = function(postObjt) {
-    this.ghostObj['data']['posts'].push(postObjt)
+JekyllToGhost.prototype.populatePosts = function(postObj) {
+    this.ghostObj['data']['posts'].push(postObj);
+    console.log(this.ghostObj['data']['posts'])
 }
 
 
