@@ -97,7 +97,6 @@ JekyllToGhost.prototype.readPosts = function() {
     var post, postName, postDate, postPath, 
         postContent, postYAML, postMarkdown
         , data
-        , postObj = {}
         , self = this
         , folder = this.folder
         , re = /(\.md|\.markdown)$/i;
@@ -116,6 +115,7 @@ JekyllToGhost.prototype.readPosts = function() {
         }
 
         for ( var i = 0; i < files.length; i++ ) {
+            var postObj = {};
             post = files[i];
             postPath = folder + post;
 
@@ -139,7 +139,7 @@ JekyllToGhost.prototype.readPosts = function() {
                 postObj['title'] = postYAML.title;
                 postObj['slug'] = postName;
                 postObj['markdown'] = postMarkdown;
-                postObj['html'] = markdown.toHTML(postMarkdown);
+                // postObj['html'] = markdown.toHTML(postMarkdown);
                 postObj['image'] = null;
                 postObj['featured'] = 0;
                 postObj['page'] = 0;
@@ -158,19 +158,27 @@ JekyllToGhost.prototype.readPosts = function() {
                 self.populatePosts(postObj);
 
                 if ( (self.ghostObj.data.posts.length + 1) === files.length ) {
-                    console.log( logWarn('CALLED at LAST'))
-                    // self.writeToFile();
+                    self.writeToFile();
                 }
             }
 
         }
+
      })
 }
 
 JekyllToGhost.prototype.writeToFile = function() {
     var data = this.ghostToJson();
+    
+    fs.writeFile(this.ghostFileOutput, data, function (error) {
+        if ( error ) {
+            console.log( logError('Something went wrong when saving the Ghost output file.') )
+        }
 
-    fs.writeFileSync('./ghost-generated.json', data, 'utf8');
+        console.log( logSuccess('Saved!') );
+        
+    }, 'utf8');
+    // fs.writeFileSync('./ghost-generated.json', data, 'utf8');
 }
 
 JekyllToGhost.prototype.populateMeta = function() {
@@ -182,7 +190,6 @@ JekyllToGhost.prototype.populateMeta = function() {
 
 JekyllToGhost.prototype.populatePosts = function(postObj) {
     this.ghostObj['data']['posts'].push(postObj);
-    console.log(this.ghostObj['data']['posts'])
 }
 
 
