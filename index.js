@@ -4,12 +4,11 @@
 
 var path = require('path')
     , fs = require('fs')
-    , async = require('async')
     , yaml = require('js-yaml')
     , uuid = require('node-uuid')
     , clc = require('cli-color')
     , markdown = require( "markdown" ).markdown
-    , readline = require('readline')
+    , readline = require('readline');
 
 var rl = readline.createInterface({
   input: process.stdin,
