@@ -42,9 +42,11 @@ function JekyllToGhost(pathPosts) {
     this.populateGhostData();
 }
 
-JekyllToGhost.prototype.populateGhostData = function(content) {
-    var self = this;
-
+/**
+ * Call methods to populate needed data format
+ * @method populateGhostData
+ */
+JekyllToGhost.prototype.populateGhostData = function() {
     this.populateMeta();
     this.readPosts();
 }
@@ -139,7 +141,7 @@ JekyllToGhost.prototype.readPosts = function() {
                 postObj['title'] = postYAML.title;
                 postObj['slug'] = postName;
                 postObj['markdown'] = postMarkdown;
-                // postObj['html'] = markdown.toHTML(postMarkdown);
+                postObj['html'] = markdown.toHTML(postMarkdown);
                 postObj['image'] = null;
                 postObj['featured'] = 0;
                 postObj['page'] = 0;
@@ -167,12 +169,21 @@ JekyllToGhost.prototype.readPosts = function() {
      })
 }
 
+/**
+ * Generate ghost json file output
+ * @method writeToFile
+ */
 JekyllToGhost.prototype.writeToFile = function() {
-    var data = this.ghostToJson();
+    var data = this.ghostToJson()
 
     fs.writeFileSync(this.ghostFileOutput, data, 'utf8');
+    console.log( logSuccess('Ghost generated successfully!') );
 }
 
+/**
+ * Populate meta obj
+ * @method populateMeta
+ */
 JekyllToGhost.prototype.populateMeta = function() {
     this.ghostObj['meta'] = {
         'exported_on': Date.now(),
@@ -180,11 +191,19 @@ JekyllToGhost.prototype.populateMeta = function() {
     }
 }
 
+/**
+ * Populate posts Array with post obj
+ * @param  {[obj]} postObj [post obj formatted]
+ * @method populatePosts
+ */
 JekyllToGhost.prototype.populatePosts = function(postObj) {
     this.ghostObj['data']['posts'].push(postObj);
 }
 
-
+/**
+ * Transform Ghost obj into an Array
+ * @return {[JSON]} [Ghost data in json format]
+ */
 JekyllToGhost.prototype.ghostToJson = function() {
     return JSON.stringify(this.ghostObj)
 }
