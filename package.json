@@ -1,7 +1,7 @@
 {
   "name": "nodejs-jekyll-to-ghost",
   "version": "1.0.0",
-  "description": "Convert Jekyll blog format to Ghost blog format",
+  "description": "Convert Jekyll blog format to Ghost blog data format",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
