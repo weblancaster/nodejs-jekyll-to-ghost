@@ -1,10 +1,10 @@
 Node.js Jekyll to Ghost
 ======================
 
-This plugin will help you to export your Markdown posts from [Jekyll](http://jekyllrb.com) to a format that can be easily imported into [Ghost?](http://ghost.org). <br> 
+This NodeJS module will help you to export your Markdown posts from [Jekyll](http://jekyllrb.com) to a format that can be easily imported into [Ghost?](http://ghost.org). <br> 
 It doesn't handle static pages, and it doesn't do anything with images. You'll have to copy those over yourself and manually adjust any URL differences.
 
-This was built by reverse-engineering the version of [Wordpress plugin](https://github.com/redwallhp/Jekyll-to-Ghost/) and  [Ghost schema](https://github.com/TryGhost/Ghost/blob/master/core/server/data/schema.js) to match the JSON file it outputs.
+This was built by reverse-engineering the version of [Wordpress plugin](https://wordpress.org/plugins/ghost/) and  [Ghost schema](https://github.com/TryGhost/Ghost/blob/master/core/server/data/schema.js) to match the JSON file it outputs.
 
 
 ### Prerequisite
