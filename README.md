@@ -1,7 +1,7 @@
 Node.js Jekyll to Ghost
 ======================
 
-This NodeJS module will help you to export your Markdown posts from [Jekyll](http://jekyllrb.com) to a format that can be easily imported into [Ghost?](http://ghost.org). <br> 
+This NodeJS module will help you to export [Jekyll](http://jekyllrb.com) markdown posts to a format that can be easily imported to [Ghost Blog Platform](http://ghost.org). <br>
 It doesn't handle static pages, and it doesn't do anything with images. You'll have to copy those over yourself and manually adjust any URL differences.
 
 This was built by reverse-engineering the version of [Wordpress plugin](https://wordpress.org/plugins/ghost/) and  [Ghost schema](https://github.com/TryGhost/Ghost/blob/master/core/server/data/schema.js) to match the JSON file it outputs.
@@ -16,10 +16,16 @@ This was built by reverse-engineering the version of [Wordpress plugin](https://
 Clone/download the repository then place your Jekyll posts into `posts` folder or create a folder in the root level with your Jekyll posts.
 Your post should be on YAML format (which is Jekyll default format).
 
-Run the command
+To install dependencies
 
 ```ruby
-node index.js
+sudo npm install
+```
+
+To start to export
+
+```ruby
+node index.js ./path/to/jekyll/posts
 ```
 
 Type the name of the folder.. wait for the magic happen.
@@ -41,7 +47,7 @@ That's it.. Now you should have migrated your posts to Ghost format and ready to
 ps: I removed all test posts on Ghost blog before migrate my Ghost generated format.
 
 ### Contributing
- 
+
 1. Fork it!
 2. Create your branch: `git checkout -b my-new-branch`
 3. Commit your changes: `git commit -am 'fix stuff'`
@@ -72,6 +78,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-
-

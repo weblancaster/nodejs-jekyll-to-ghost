@@ -7,13 +7,7 @@ var path = require('path')
     , yaml = require('js-yaml')
     , uuid = require('node-uuid')
     , clc = require('cli-color')
-    , markdown = require( "markdown" ).markdown
-    , readline = require('readline');
-
-var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
+    , markdown = require( "markdown" ).markdown;
 
 // default color messages
 var logError = clc.red.bold;
@@ -21,14 +15,13 @@ var logWarn = clc.yellow;
 var logNotice = clc.blue;
 var logSuccess = clc.green;
 
-
 /**
  * Class/Constructor JekyllToGhost responsible to bootstrap the conversion to Ghost format (json)
  * @param {[string]} posts [contain path to Jekyll posts]
  * @class JekyllToGhost
  */
 function JekyllToGhost(pathPosts) {
-    this.folder = './' + pathPosts + '/';
+    this.folder = pathPosts;
     this.ghostFileOutput = './ghost-generated.json';
     this.ghostObj = {
         data: {
@@ -93,7 +86,7 @@ JekyllToGhost.prototype.extractPostMarkdown = function(content) {
  * @method readPosts
  */
 JekyllToGhost.prototype.readPosts = function() {
-    var post, postName, postDate, postPath, 
+    var post, postName, postDate, postPath,
         postContent, postYAML, postMarkdown
         , data
         , self = this
@@ -205,13 +198,15 @@ JekyllToGhost.prototype.ghostToJson = function() {
     return JSON.stringify(this.ghostObj)
 }
 
+
 /**
  * Get the user input (folder name) and instantiate JekyllToGhost
  * passing the path of the folder
  */
-console.log( logSuccess('Running...') )
+console.log( logSuccess('Running...') );
 
-rl.question('Type the folder name where Jekyll posts are: ', function(pathPosts) {
-    var app = new JekyllToGhost(pathPosts);
-    rl.close();
-});
+if ( process.argv[2] ) {
+  var app = new JekyllToGhost(process.argv[2]);
+} else {
+    console.log( logWarn('You need to specify a path to Jekyll posts.') );
+}
