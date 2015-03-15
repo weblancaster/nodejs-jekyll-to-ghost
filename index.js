@@ -7,7 +7,8 @@ var path = require('path')
     , yaml = require('js-yaml')
     , uuid = require('node-uuid')
     , clc = require('cli-color')
-    , markdown = require( "markdown" ).markdown;
+    , markdown = require( "markdown" ).markdown
+    , path = require('path');
 
 // default color messages
 var logError = clc.red.bold;
@@ -109,7 +110,7 @@ JekyllToGhost.prototype.readPosts = function() {
         for ( var i = 0; i < files.length; i++ ) {
             var postObj = {};
             post = files[i];
-            postPath = folder + post;
+            postPath = path.join(folder, post);
 
             if ( re.exec(post) ) {
                 postName = self.extractPostName(post);
