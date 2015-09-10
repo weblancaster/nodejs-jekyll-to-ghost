@@ -9,7 +9,7 @@ This was built by reverse-engineering the version of [Wordpress plugin](https://
 
 ### Prerequisite
 
-- Node.js
+- Node.js v4.0
 
 ### How to use
 
