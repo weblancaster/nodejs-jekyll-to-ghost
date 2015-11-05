@@ -1,0 +1,8 @@
+---
+layout: post
+title: Lorem ipsum dolor 01
+
+excerpt: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+---
+ 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

@@ -166,6 +166,7 @@ class JekyllToGhost {
      * @method extractPostMarkdown
      */
     extractPostMarkdown (content) {
+        console.log(content.substring(content.lastIndexOf('---') + 3, content.length))
         return content.substring(content.lastIndexOf('---') + 3, content.length);
     }
 
@@ -219,6 +220,8 @@ console.log( logSuccess('Running...') );
 
 if ( process.argv[2] ) {
   let app = new JekyllToGhost(process.argv[2]);
-} else {
+} else if ( process.argv.length === 1 ) {
     console.log( logWarn('You need to specify a path to Jekyll posts.') );
 }
+
+module.exports = JekyllToGhost;
