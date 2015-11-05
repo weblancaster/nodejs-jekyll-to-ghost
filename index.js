@@ -166,7 +166,6 @@ class JekyllToGhost {
      * @method extractPostMarkdown
      */
     extractPostMarkdown (content) {
-        console.log(content.substring(content.lastIndexOf('---') + 3, content.length))
         return content.substring(content.lastIndexOf('---') + 3, content.length);
     }
 
