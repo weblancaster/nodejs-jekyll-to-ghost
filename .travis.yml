@@ -1,3 +1,5 @@
 language: node_js
 node_js:
   - "5.0"
+service_name: travis-pro
+repo_token: CA0Je0OCGed52DQVOwP4xz9WN6MgnO83k
