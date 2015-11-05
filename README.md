@@ -1,7 +1,7 @@
 Node.js Jekyll to Ghost
 ======================
 
-[![Build Status](https://travis-ci.org/weblancaster/nodejs-jekyll-to-ghost.svg?branch=master)](https://travis-ci.org/weblancaster/nodejs-jekyll-to-ghost) [![Coverage Status](https://coveralls.io/repos/weblancaster/nodejs-jekyll-to-ghost/badge.svg?branch=master&service=github)](https://coveralls.io/github/weblancaster/nodejs-jekyll-to-ghost?branch=master)
+[![Build Status](https://travis-ci.org/weblancaster/nodejs-jekyll-to-ghost.svg?branch=master)](https://travis-ci.org/weblancaster/nodejs-jekyll-to-ghost)
 
 This NodeJS module will help you to export [Jekyll](http://jekyllrb.com) markdown posts to a format that can be easily imported to [Ghost Blog Platform](http://ghost.org). <br>
 It doesn't handle static pages, and it doesn't do anything with images. You'll have to copy those over yourself and manually adjust any URL differences.
