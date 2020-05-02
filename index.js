@@ -28,7 +28,9 @@ class JekyllToGhost {
         this.ghostFileOutput = './ghost-generated.json';
         this.ghostObj = {
             data: {
-                posts: []
+                posts: [],
+                tags: [],
+                posts_tags: []
             }
         };
 
@@ -57,6 +59,7 @@ class JekyllToGhost {
         let postContent;
         let postYAML; 
         let postMarkdown;
+        let mobiledoc;
         let data;
         let folder = this.folder;
         let re = /(\.md|\.markdown)$/i;
@@ -76,6 +79,8 @@ class JekyllToGhost {
 
             for ( let i = 0; i < files.length; i++ ) {
                 let postObj = {};
+                let tagObj = {};
+                let postsTagsObj = {}
                 post = files[i];
                 postPath = path.join(folder, post);
 
@@ -97,20 +102,17 @@ class JekyllToGhost {
                 postContent = data.toString();
                 postYAML = this.extractPostYAML(postContent);
                 postMarkdown = this.extractPostMarkdown(postContent);
+                mobiledoc = this.getMobiledoc(postMarkdown);
 
                 postObj['id'] = i;
-                postObj['uuid'] = uuid.v4();
                 postObj['title'] = postYAML.title;
                 postObj['slug'] = postName;
-                postObj['markdown'] = postMarkdown;
+                postObj['mobiledoc'] = mobiledoc;
                 postObj['html'] = markdown.toHTML(postMarkdown);
-                postObj['image'] = null;
+                postObj['feature_image'] = null;
                 postObj['featured'] = 0;
                 postObj['page'] = 0;
                 postObj['status'] = 'published';
-                postObj['language'] = 'en_US';
-                postObj['meta_title'] = postYAML.title;
-                postObj['meta_description'] = null;
                 postObj['author_id'] = 1;
                 postObj['created_at'] = Date.parse(postDate);
                 postObj['created_by'] = 1;
@@ -119,7 +121,17 @@ class JekyllToGhost {
                 postObj['published_at'] = Date.parse(postDate);
                 postObj['published_by'] = 1;
 
+                for(let x of postYAML.tags){
+                    tagObj['id'] = i;
+                    tagObj['name'] = x;
+                }
+                
+                postsTagsObj['tag_id'] = i;
+                postsTagsObj['tag_id'] = i;
+
                 this.populatePosts(postObj);
+                this.populateTags(tagObj)
+                this.populatePostTags(postsTagsObj)
 
                 if ( (this.ghostObj.data.posts.length + 1) === files.length ) {
                     this.writeToFile();
@@ -170,14 +182,48 @@ class JekyllToGhost {
     }
 
     /**
+     * Create Mobiledoc from Markdown
+     * @param markdown  [post in markdown form]
+     * @return {json}
+     * @method getMobiledoc
+     */
+    getMobiledoc (markdown){
+        return JSON.stringify({
+            version: '0.3.1',
+            markups: [],
+            atoms: [],
+            cards: [['markdown', {cardName: 'markdown', markdown: markdown}]],
+            sections: [[10, 0]]
+        })
+    }
+
+    /**
      * Populate meta obj
      * @method populateMeta
      */
     populateMeta () {
         this.ghostObj['meta'] = {
             'exported_on': Date.now(),
-            'version': '000'
+            'version': '2.14.0'
         }
+    }
+
+    /**
+     * Populate tag array with tag obj
+     * @param tagObj [tag obj formatted]
+     * @method populateTags
+     */
+    populateTags(tagObj){
+        this.ghostObj['data']['tags'].push(tagObj)
+    }
+
+    /**
+     * Populate post tag array with tag obj
+     * @param postsTagsObj [posts tag obj formatted]
+     * @method populatePostTags
+     */
+    populatePostTags(postsTagsObj){
+        this.ghostObj['data']['posts_tags'].push(postsTagsObj)
     }
 
     /**
